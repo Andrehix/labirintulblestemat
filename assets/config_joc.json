@@ -1,0 +1,13 @@
+{
+    "joc": {
+        "nume": "Labirintul Blestemat",
+        "versiune": "3.0",
+        "dimensiune_harta": 14,
+        "energie_initiala": 50,
+        "numar_inamici": 3,
+        "capacitate_inventar": 4,
+        "raza_vizibilitate": 3,
+        "numar_capcane": 5,
+        "numar_loot": 6
+    }
+}

@@ -1,0 +1,5 @@
+# Configuratie inamici pentru Labirintul Blestemat
+# Format: tip x y extra
+chaser 10 3
+fantoma 7 7
+gardian 4 10 4

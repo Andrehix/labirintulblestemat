@@ -1,0 +1,6 @@
+ext/** linguist-vendored
+build/** linguist-vendored
+cmake/** linguist-vendored
+*.cmake linguist-vendored
+*.txt linguist-detectable
+*.md linguist-detectable
