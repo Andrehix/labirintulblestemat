@@ -11,8 +11,8 @@ void Fantoma::muta(const Jucator& jucator, const Harta& harta) {
     std::vector<std::pair<int, int>> mutariPosibile;
 
     for (int i = 0; i < 4; i++) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
+        int nx = preiaXProtected() + dx[i];
+        int ny = preiaYProtected() + dy[i];
         if (!harta.esteZid(nx, ny)) {
             mutariPosibile.emplace_back(nx, ny);
         }
@@ -22,8 +22,8 @@ void Fantoma::muta(const Jucator& jucator, const Harta& harta) {
         auto& rng = GeneratorRandom::preiaInstanta().preiaGen();
         std::uniform_int_distribution<size_t> dist(0, mutariPosibile.size() - 1);
         size_t alegere = dist(rng);
-        x = mutariPosibile[alegere].first;
-        y = mutariPosibile[alegere].second;
+        seteazaXProtected(mutariPosibile[alegere].first);
+        seteazaYProtected(mutariPosibile[alegere].second);
     }
 }
 
@@ -34,5 +34,9 @@ std::string Fantoma::strategieVanatoare() const {
 }
 
 std::unique_ptr<VanatorAI> Fantoma::clone() const {
-    return std::make_unique<Fantoma>(x, y);
+    return std::make_unique<Fantoma>(preiaXProtected(), preiaYProtected());
+}
+
+std::string Fantoma::mesajInfrangere() const {
+    return "O Fantoma te-a inghitit in ceata.";
 }

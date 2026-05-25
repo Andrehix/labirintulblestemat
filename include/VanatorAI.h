@@ -8,10 +8,16 @@
 #include "Harta.h"
 
 class VanatorAI {
-protected:
+private:
     int x, y;
 
+protected:
     static int distantaManhattan(int x1, int y1, int x2, int y2);
+
+    int preiaXProtected() const { return x; }
+    int preiaYProtected() const { return y; }
+    void seteazaXProtected(int nouX) { x = nouX; }
+    void seteazaYProtected(int nouY) { y = nouY; }
 
 public:
     explicit VanatorAI(int startX = 5, int startY = 5);
@@ -19,24 +25,22 @@ public:
 
     int preiaX() const;
     int preiaY() const;
-    void reseteazaPozitie(int tx, int ty);
 
-    // ── funcții virtuale (Tema 2) ──
     virtual void muta(const Jucator& jucator, const Harta& harta);
+    virtual void actiuneSpeciala(const Jucator&) {}
 
-    // Funcție virtuală specifică temei: strategia de vânătoare (nu simplu getter/setter)
     virtual std::string strategieVanatoare() const = 0;
+    virtual std::string mesajInfrangere() const = 0;
 
-    // Constructor virtual (clone)
+    virtual bool operator==(const VanatorAI& other) const;
+
     virtual std::unique_ptr<VanatorAI> clone() const = 0;
 
-    // Interfață non-virtuală: afișare care apelează funcția virtuală privată
     void afiseaza(std::ostream& os) const;
 
-    // Simbolul trebuie să fie virtual pentru polimorfism
     virtual char preiaSimbol() const;
 
     friend std::ostream& operator<<(std::ostream& os, const VanatorAI& v);
 };
 
-#endif // VANATOR_AI_H
+#endif

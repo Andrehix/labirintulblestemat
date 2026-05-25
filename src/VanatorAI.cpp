@@ -7,8 +7,6 @@ VanatorAI::VanatorAI(int startX, int startY) : x(startX), y(startY) {}
 int VanatorAI::preiaX() const { return x; }
 int VanatorAI::preiaY() const { return y; }
 
-void VanatorAI::reseteazaPozitie(int tx, int ty) { x = tx; y = ty; }
-
 int VanatorAI::distantaManhattan(int x1, int y1, int x2, int y2) {
     return std::abs(x1 - x2) + std::abs(y1 - y2);
 }
@@ -42,6 +40,10 @@ void VanatorAI::muta(const Jucator& jucator, const Harta& harta) {
 }
 
 char VanatorAI::preiaSimbol() const { return 'V'; }
+
+bool VanatorAI::operator==(const VanatorAI& other) const {
+    return x == other.x && y == other.y;
+}
 
 void VanatorAI::afiseaza(std::ostream& os) const {
     os << fmt::format("Inamic '{}' => (X: {}, Y: {}) | Strategie: {}",

@@ -2,7 +2,10 @@
 #include "GeneratorRandom.h"
 #include <random>
 
-Harta::~Harta() = default;
+Harta::~Harta() {
+    grila.clear();
+    grilaVizibilitate.clear();
+}
 
 Harta::Harta(int dim) : dimensiune(dim) {
     bool hartaBuna = false;
@@ -36,7 +39,18 @@ Harta::Harta(int dim) : dimensiune(dim) {
     }
 }
 
-Harta::Harta(const Harta& other) = default;
+Harta::Harta(const Harta& other)
+    : dimensiune(other.dimensiune)
+{
+    grila.reserve(dimensiune);
+    for (int i = 0; i < dimensiune; ++i) {
+        grila.push_back(other.grila[i]);
+    }
+    grilaVizibilitate.reserve(dimensiune);
+    for (int i = 0; i < dimensiune; ++i) {
+        grilaVizibilitate.push_back(other.grilaVizibilitate[i]);
+    }
+}
 
 void Harta::swap(Harta& other) noexcept {
     std::swap(dimensiune, other.dimensiune);
@@ -114,8 +128,6 @@ void Harta::calculeazaCampVizual(int centruX, int centruY, int raza) {
         }
     }
 }
-
-const std::vector<std::vector<char>>& Harta::preiaGrila() const { return grila; }
 
 std::ostream& operator<<(std::ostream& os, const Harta& h) {
     os << "\n   == RADAR: TEREN ==\n";

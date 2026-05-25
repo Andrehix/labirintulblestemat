@@ -13,6 +13,7 @@ public:
     char preiaSimbol() const override;
     std::string strategieVanatoare() const override;
     std::unique_ptr<VanatorAI> clone() const override;
+    std::string mesajInfrangere() const override;
 };
 
-#endif // FANTOMA_H
+#endif

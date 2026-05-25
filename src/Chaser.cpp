@@ -11,16 +11,16 @@ void Chaser::muta(const Jucator& jucator, const Harta& harta) {
     const int dx[] = {-1, 1, 0, 0};
     const int dy[] = {0, 0, -1, 1};
 
-    int celMaiBunX = x;
-    int celMaiBunY = y;
+    int celMaiBunX = preiaXProtected();
+    int celMaiBunY = preiaYProtected();
     int minDist = INT_MAX;
 
-    int diffX = std::abs(tintX - x);
-    int diffY = std::abs(tintY - y);
+    int diffX = std::abs(tintX - preiaXProtected());
+    int diffY = std::abs(tintY - preiaYProtected());
 
     for (int i = 0; i < 4; i++) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
+        int nx = preiaXProtected() + dx[i];
+        int ny = preiaYProtected() + dy[i];
 
         if (!harta.esteZid(nx, ny)) {
             int dist = distantaManhattan(nx, ny, tintX, tintY);
@@ -35,8 +35,8 @@ void Chaser::muta(const Jucator& jucator, const Harta& harta) {
         }
     }
 
-    x = celMaiBunX;
-    y = celMaiBunY;
+    seteazaXProtected(celMaiBunX);
+    seteazaYProtected(celMaiBunY);
 }
 
 char Chaser::preiaSimbol() const { return 'C'; }
@@ -46,5 +46,9 @@ std::string Chaser::strategieVanatoare() const {
 }
 
 std::unique_ptr<VanatorAI> Chaser::clone() const {
-    return std::make_unique<Chaser>(x, y);
+    return std::make_unique<Chaser>(preiaXProtected(), preiaYProtected());
+}
+
+std::string Chaser::mesajInfrangere() const {
+    return "Un Chaser te-a vanat fara mila.";
 }

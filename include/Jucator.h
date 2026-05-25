@@ -33,4 +33,4 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Jucator& j);
 };
 
-#endif // JUCATOR_H
+#endif

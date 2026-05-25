@@ -3,11 +3,17 @@
 EroareJoc::EroareJoc(const std::string& mesaj)
     : std::runtime_error("EroareJoc: " + mesaj) {}
 
-EroareHarta::EroareHarta(const std::string& mesaj)
-    : EroareJoc("EroareHarta: " + mesaj) {}
+EroareInitializare::EroareInitializare(const std::string& mesaj)
+    : EroareJoc("EroareInitializare: " + mesaj) {}
 
-EroareJucator::EroareJucator(const std::string& mesaj)
-    : EroareJoc("EroareJucator: " + mesaj) {}
+EroareFisierLipsa::EroareFisierLipsa(const std::string& mesaj)
+    : EroareInitializare("Fisier Lipsa: " + mesaj) {}
 
-EroareInventar::EroareInventar(const std::string& mesaj)
-    : EroareJoc("EroareInventar: " + mesaj) {}
+EroareFormatFisier::EroareFormatFisier(const std::string& mesaj)
+    : EroareInitializare("Format Fisier: " + mesaj) {}
+
+EroareLogica::EroareLogica(const std::string& mesaj)
+    : EroareJoc("EroareLogica: " + mesaj) {}
+
+EroareActiuneInvalida::EroareActiuneInvalida(const std::string& mesaj)
+    : EroareLogica("Actiune Invalida: " + mesaj) {}

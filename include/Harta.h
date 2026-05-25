@@ -31,9 +31,8 @@ public:
     void seteazaEntitate(int x, int y, char c);
     void curataEntitate(int x, int y);
     void calculeazaCampVizual(int centruX, int centruY, int raza);
-    const std::vector<std::vector<char>>& preiaGrila() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Harta& h);
 };
 
-#endif // HARTA_H
+#endif

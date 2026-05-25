@@ -8,9 +8,6 @@
 #include <fstream>
 #include "Exceptii.h"
 
-// Clasă șablon (Template class) — Tema 3
-// Gestionează o colecție de elemente de orice tip (Obiect, inamici, etc.)
-// Oferă statistici, sortare, filtrare, salvare/încărcare
 template <typename T>
 class ManagementResurse {
 private:
@@ -27,29 +24,23 @@ public:
         resurse.push_back(element);
     }
 
-    void adaugaMultiple(const std::vector<T>& elemente) {
-        for (const auto& el : elemente) {
-            resurse.push_back(el);
-        }
-    }
-
     void sterge(size_t index) {
         if (index >= resurse.size()) {
-            throw EroareInventar("Index depasit in ManagementResurse::sterge");
+            throw EroareActiuneInvalida("Index depasit in ManagementResurse::sterge");
         }
         resurse.erase(resurse.begin() + static_cast<long>(index));
     }
 
     const T& preia(size_t index) const {
         if (index >= resurse.size()) {
-            throw EroareInventar("Index depasit in ManagementResurse::preia");
+            throw EroareActiuneInvalida("Index depasit in ManagementResurse::preia");
         }
         return resurse[index];
     }
 
     T& preia(size_t index) {
         if (index >= resurse.size()) {
-            throw EroareInventar("Index depasit in ManagementResurse::preia");
+            throw EroareActiuneInvalida("Index depasit in ManagementResurse::preia");
         }
         return resurse[index];
     }
@@ -59,13 +50,11 @@ public:
 
     const std::vector<T>& preiaToate() const { return resurse; }
 
-    // Sortare cu comparator
     template <typename Comparator>
     void sorteaza(Comparator comp) {
         std::sort(resurse.begin(), resurse.end(), comp);
     }
 
-    // Filtrare: returnează elementele care satisfac predicatul
     template <typename Predicat>
     std::vector<T> filtreaza(Predicat pred) const {
         std::vector<T> rezultat;
@@ -77,9 +66,6 @@ public:
         return rezultat;
     }
 
-    // Golește colecția
-    void goleste() { resurse.clear(); }
-
     friend std::ostream& operator<<(std::ostream& os, const ManagementResurse<T>& mr) {
         os << "ManagementResurse: " << mr.resurse.size() << " elemente\n";
         for (size_t i = 0; i < mr.resurse.size(); ++i) {
@@ -89,20 +75,4 @@ public:
     }
 };
 
-// Funcție șablon (Template function) — Tema 3
-// Găsește elementul maxim dintr-un vector pe baza unui comparator
-template <typename T, typename Comparator>
-T gasesteMaxim(const std::vector<T>& colectie, Comparator comp) {
-    if (colectie.empty()) {
-        throw std::runtime_error("Colectie vida in gasesteMaxim");
-    }
-    T maxim = colectie[0];
-    for (size_t i = 1; i < colectie.size(); ++i) {
-        if (comp(colectie[i], maxim)) {
-            maxim = colectie[i];
-        }
-    }
-    return maxim;
-}
-
-#endif // MANAGEMENT_RESURSE_H
+#endif

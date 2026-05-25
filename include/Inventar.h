@@ -2,12 +2,12 @@
 #define INVENTAR_H
 
 #include <iostream>
-#include <vector>
 #include "Obiect.h"
+#include "ManagementResurse.h"
 
 class Inventar {
 private:
-    std::vector<Obiect> elemente;
+    ManagementResurse<Obiect> elemente;
     int capacitateMaxima;
 
 public:
@@ -19,9 +19,8 @@ public:
     bool contineObiectCuSimbol(char simbol) const;
     void eliminaObiectCuSimbol(char simbol);
     size_t dimensiune() const;
-    int capacitate() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Inventar& inv);
 };
 
-#endif // INVENTAR_H
+#endif

@@ -17,6 +17,7 @@ Pe harta apar simboluri:
 - C — Chaser (te urmareste direct)
 - F — Fantoma (se misca haotic)
 - G — Gardian (patruleaza, dar te urmareste daca esti prea aproape)
+- L — Mimic (arata ca loot, dar e un inamic nemiscat care te ataca daca treci peste el)
 - B — Baterie (recuperezi energie)
 - E — Elixir (recuperezi mai multa energie)
 - P — Teleportor (un obiect rar, foarte util)
@@ -28,6 +29,8 @@ Pe harta apar simboluri:
 
 Castigi daca ajungi la iesire cu cheia in posesie. Pierzi daca ramai fara energie sau daca vreun inamic ajunge pe aceeasi pozitie cu tine. La final primesti un scor in functie de energia ramasa.
 
+Jocul tine un istoric al evenimentelor prin Observer pattern (LoggerJoc): fiecare obiect cules, capcana activata sau cheie gasita este inregistrata.
+
 ## Structura proiectului
 
 ```
@@ -36,21 +39,24 @@ include/            — headerele
   Inventar.h        — rucsacul cu capacitate limitata
   Harta.h           — labirintul propriu-zis (BFS pentru verificare drum)
   Jucator.h         — exploratorul
-  VanatorAI.h       — baza abstracta pentru inamici
+  VanatorAI.h       — baza abstracta pentru inamici (virtual pur)
   Chaser.h          — inamic care urmareste direct jucatorul
   Fantoma.h         — inamic care se misca aleatoriu
   Gardian.h         — inamic care patruleaza, ataca doar in raza
-  MotorJoc.h        — engine-ul jocului (bucla principala)
+  Mimic.h           — inamic static deghizat in loot
+  MotorJoc.h        — engine-ul jocului (bucla principala + Observer/SubiectEvenimente)
   ConfiguratorJoc.h — Singleton pentru setari
-  FactoryInamici.h  — Factory Method pentru creat inamici
+  FactoryInamici.h  — Factory Method + template pentru creat inamici
   ManagementResurse.h — clasa sablon (template) pentru colectii
-  Exceptii.h        — ierarhia de exceptii
+  Exceptii.h        — ierarhia de exceptii (7 clase, 2 ramuri)
   GeneratorRandom.h — Singleton pentru generatorul de numere aleatoare
-  Example.h         — clasa placeholder din template-ul initial
+  ObserverJoc.h     — interfata Observer
+  LoggerJoc.h       — implementare Observer pentru logare evenimente
+  SubiectEvenimente.h — clasa de baza pentru subiectul observabil
 src/                — implementarile
 assets/             — fisiere de configurare
-  config_joc.txt    — setari gen dimensiune harta, energie, numar inamici
-  config_joc.json   — aceleasi setari in format JSON (demo biblioteca externa)
+  config_joc.txt    — setari (dimensiune harta, energie, numar inamici)
+  config_joc.json   — aceleasi setari in format JSON (biblioteca externa)
   inamici.txt       — lista de inamici (tip, coordonate, parametri)
 ext/                — biblioteci externe (nlohmann/json, fmt)
 ```

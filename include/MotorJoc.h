@@ -14,15 +14,18 @@
 #include "ConfiguratorJoc.h"
 #include "FactoryInamici.h"
 #include "Exceptii.h"
+#include "SubiectEvenimente.h"
+#include "ObserverJoc.h"
+#include "ManagementResurse.h"
 
-class MotorJoc {
+class MotorJoc : public SubiectEvenimente {
 private:
     Harta harta;
     Jucator jucator;
     std::vector<std::unique_ptr<VanatorAI>> inamici;
     int xDestinatie, yDestinatie;
 
-    std::vector<Obiect> obiectePeHarta;
+    ManagementResurse<Obiect> obiectePeHarta;
     std::vector<std::pair<int, int>> coordObiecte;
     std::vector<std::pair<int, int>> pozitiiCapcane;
     std::vector<int> dauneCapcane;
@@ -30,7 +33,6 @@ private:
     int scor;
     bool cheiePlasata;
 
-    // Static counter — câte jocuri s-au creat
     static int numarTotalJocuri;
 
     void genereazaLoot();
@@ -49,4 +51,4 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const MotorJoc& mj);
 };
 
-#endif // MOTOR_JOC_H
+#endif

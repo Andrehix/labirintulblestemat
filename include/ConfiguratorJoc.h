@@ -23,9 +23,7 @@ public:
 
     void incarcaDinFisier(const std::string& caleFisier);
 
-    std::string preiaSetare(const std::string& cheie, const std::string& implicit = "") const;
     int preiaSetareInt(const std::string& cheie, int implicit = 0) const;
-    bool preiaSetareBool(const std::string& cheie, bool implicit = false) const;
 
     void afiseazaSetari() const;
 

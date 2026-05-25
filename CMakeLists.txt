@@ -54,12 +54,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE
-        src/Example.cpp
         src/Obiect.cpp
         src/Inventar.cpp
         src/Harta.cpp
         src/Jucator.cpp
-        src/VanatorAI.cpp
+        src/VanatorAI.cpp src/Mimic.cpp
         src/Fantoma.cpp
         src/Chaser.cpp
         src/Gardian.cpp

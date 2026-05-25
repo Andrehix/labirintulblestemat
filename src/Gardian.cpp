@@ -6,7 +6,8 @@ Gardian::Gardian(int startX, int startY, int raza)
     : VanatorAI(startX, startY), razaDetectie(raza) {}
 
 void Gardian::muta(const Jucator& jucator, const Harta& harta) {
-    int dist = distantaManhattan(x, y, jucator.preiaX(), jucator.preiaY());
+    int dist = distantaManhattan(preiaXProtected(), preiaYProtected(),
+                                  jucator.preiaX(), jucator.preiaY());
 
     if (dist <= razaDetectie) {
         VanatorAI::muta(jucator, harta);
@@ -20,11 +21,11 @@ void Gardian::muta(const Jucator& jucator, const Harta& harta) {
         int incercari = 0;
         while (incercari < 4) {
             int dir = distDir(rng);
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];
+            int nx = preiaXProtected() + dx[dir];
+            int ny = preiaYProtected() + dy[dir];
             if (!harta.esteZid(nx, ny)) {
-                x = nx;
-                y = ny;
+                seteazaXProtected(nx);
+                seteazaYProtected(ny);
                 break;
             }
             incercari++;
@@ -39,5 +40,25 @@ std::string Gardian::strategieVanatoare() const {
 }
 
 std::unique_ptr<VanatorAI> Gardian::clone() const {
-    return std::make_unique<Gardian>(x, y, razaDetectie);
+    return std::make_unique<Gardian>(preiaXProtected(), preiaYProtected(), razaDetectie);
+}
+
+void Gardian::alerteazaZona() {
+    std::cout << "[GARDIAN] Alarma! Intrus depistat!\n";
+}
+
+void Gardian::actiuneSpeciala(const Jucator& jucator) {
+    if (std::abs(preiaXProtected() - jucator.preiaX()) <= 2 && std::abs(preiaYProtected() - jucator.preiaY()) <= 2) {
+        alerteazaZona();
+    }
+}
+
+bool Gardian::operator==(const VanatorAI& other) const {
+    const auto* g = dynamic_cast<const Gardian*>(&other);
+    if (!g) return false;
+    return VanatorAI::operator==(other) && razaDetectie == g->razaDetectie;
+}
+
+std::string Gardian::mesajInfrangere() const {
+    return "Gardianul te-a descoperit in raza lui.";
 }

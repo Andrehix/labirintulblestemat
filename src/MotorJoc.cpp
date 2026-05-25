@@ -53,7 +53,7 @@ void MotorJoc::genereazaLoot() {
 
     int incercariLoot = 0;
     const int maxIncercariLoot = maxLoot * 100;
-    while (static_cast<int>(obiectePeHarta.size()) < maxLoot && incercariLoot < maxIncercariLoot) {
+    while (static_cast<int>(obiectePeHarta.dimensiune()) < maxLoot && incercariLoot < maxIncercariLoot) {
         incercariLoot++;
         int bx = distDim(rng);
         int by = distDim(rng);
@@ -73,11 +73,15 @@ void MotorJoc::genereazaLoot() {
             else
                 ob = Obiect("Elixir Vital", 30, 'E');
 
-            obiectePeHarta.push_back(ob);
+            obiectePeHarta.adauga(ob);
             coordObiecte.emplace_back(bx, by);
             harta.seteazaEntitate(bx, by, ob.preiaSimbol());
         }
     }
+
+    obiectePeHarta.sorteaza([](const Obiect& a, const Obiect& b) {
+        return a.preiaBonus() > b.preiaBonus();
+    });
 
     if (!cheiePlasata) {
         bool plasat = false;
@@ -146,7 +150,7 @@ void MotorJoc::ruleazaJoc() {
         for (size_t i = 0; i < coordObiecte.size(); i++) {
             if (coordObiecte[i].first != -1) {
                 harta.seteazaEntitate(coordObiecte[i].first, coordObiecte[i].second,
-                                      obiectePeHarta[i].preiaSimbol());
+                                      obiectePeHarta.preia(i).preiaSimbol());
             }
         }
 
@@ -154,12 +158,20 @@ void MotorJoc::ruleazaJoc() {
             harta.seteazaEntitate(cap.first, cap.second, 'T');
         }
 
+        auto bonusObiecte = obiectePeHarta.filtreaza([](const Obiect& o) {
+            return o.preiaBonus() >= 15;
+        });
+
         for (size_t i = 0; i < coordObiecte.size(); i++) {
             if (coordObiecte[i].first == jucator.preiaX() &&
                 coordObiecte[i].second == jucator.preiaY()) {
-                if (jucator.adunaObiect(obiectePeHarta[i])) {
-                    std::cout << "\n[!] Ai gasit: " << obiectePeHarta[i].preiaNume() << "\n";
+                if (jucator.adunaObiect(obiectePeHarta.preia(i))) {
+                    auto numeObiect = obiectePeHarta.preia(i).preiaNume();
+                    notificaObservatori("Obiect cules: " + numeObiect);
                     scor += 10;
+                    if (!bonusObiecte.empty()) {
+                        scor += 5;
+                    }
                     coordObiecte[i] = {-1, -1};
                 }
             }
@@ -168,6 +180,7 @@ void MotorJoc::ruleazaJoc() {
         if (harta.preiaCelula(jucator.preiaX(), jucator.preiaY()) == 'K') {
             jucator.adunaObiect(Obiect("Cheie", 0, 'K'));
             harta.seteazaEntitate(jucator.preiaX(), jucator.preiaY(), '.');
+            notificaObservatori("Cheia a fost gasita!");
             scor += 25;
         }
 
@@ -175,7 +188,7 @@ void MotorJoc::ruleazaJoc() {
             if (pozitiiCapcane[i].first == jucator.preiaX() &&
                 pozitiiCapcane[i].second == jucator.preiaY()) {
                 int dauna = dauneCapcane[i];
-                std::cout << "\n[!!!] Ai calcat intr-o capcana! Pierzi " << dauna << " energie.\n";
+                notificaObservatori("Capcana activata! -" + std::to_string(dauna) + " energie");
                 jucator.scadeEnergie(dauna);
                 scor -= 5;
                 pozitiiCapcane.erase(pozitiiCapcane.begin() + static_cast<long>(i));
@@ -192,22 +205,26 @@ void MotorJoc::ruleazaJoc() {
 
         harta.calculeazaCampVizual(jucator.preiaX(), jucator.preiaY(), razaViz);
 
+        jucator.afiseazaStatusInventar();
+
         std::cout << *this;
         std::cout << "\nScor curent: " << scor << "\n";
         std::cout << "Actiuni: [w/a/s/d]=Misca | [e]=Foloseste Baterie | [t]=Teleportor | [q]=Abandon\n";
         std::cout << "Alege miscare: ";
 
         bool capturat = false;
+        const VanatorAI* capturator = nullptr;
         for (const auto& inamic : inamici) {
             if (jucator.preiaX() == inamic->preiaX() &&
                 jucator.preiaY() == inamic->preiaY()) {
                 capturat = true;
+                capturator = inamic.get();
                 break;
             }
         }
 
         if (capturat) {
-            std::cout << "\n>>> INFRANGERE! Un spectru ti-a furat sufletul! Game Over. <<<\n";
+            std::cout << "\n>>> INFRANGERE! " << capturator->mesajInfrangere() << " Game Over. <<<\n";
             break;
         }
         if (jucator.preiaX() == xDestinatie && jucator.preiaY() == yDestinatie) {
@@ -233,6 +250,7 @@ void MotorJoc::ruleazaJoc() {
 
         if (optiune == 'e') {
             jucator.beaPotiuneDinInventar();
+            jucator.incarcaEnergie(5);
         } else if (optiune == 't') {
             if (jucator.folosesteTeleportor()) {
                 int nx = 0, ny = 0;
@@ -252,6 +270,7 @@ void MotorJoc::ruleazaJoc() {
         for (const auto& inamic : inamici) {
             if (dist100(rng) > 20) {
                 inamic->muta(jucator, harta);
+                inamic->actiuneSpeciala(jucator);
             }
         }
 

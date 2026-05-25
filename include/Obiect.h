@@ -20,4 +20,4 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Obiect& obj);
 };
 
-#endif // OBIECT_H
+#endif

@@ -27,30 +27,30 @@ ConfiguratorJoc& ConfiguratorJoc::preiaInstanta() {
 void ConfiguratorJoc::incarcaDinFisier(const std::string& caleFisier) {
     std::ifstream fisier(caleFisier);
     if (!fisier.is_open()) {
-        throw EroareHarta("Nu s-a putut deschide fisierul de configurare: " + caleFisier);
+        throw EroareFisierLipsa("Nu s-a putut deschide fisierul de configurare: " + caleFisier);
     }
 
     std::string linie;
+    int numarLinie = 0;
     while (std::getline(fisier, linie)) {
+        numarLinie++;
         if (linie.empty() || linie[0] == '#') continue;
 
         auto poz = linie.find('=');
-        if (poz != std::string::npos) {
-            std::string cheie = linie.substr(0, poz);
-            std::string valoare = linie.substr(poz + 1);
-            cheie.erase(0, cheie.find_first_not_of(" \t"));
-            cheie.erase(cheie.find_last_not_of(" \t") + 1);
-            valoare.erase(0, valoare.find_first_not_of(" \t"));
-            valoare.erase(valoare.find_last_not_of(" \t") + 1);
-            setari[cheie] = valoare;
+        if (poz == std::string::npos) {
+            throw EroareFormatFisier("Format invalid in fisierul de configurare la linia "
+                                 + std::to_string(numarLinie) + ": " + linie);
         }
+
+        std::string cheie = linie.substr(0, poz);
+        std::string valoare = linie.substr(poz + 1);
+        cheie.erase(0, cheie.find_first_not_of(" \t"));
+        cheie.erase(cheie.find_last_not_of(" \t") + 1);
+        valoare.erase(0, valoare.find_first_not_of(" \t"));
+        valoare.erase(valoare.find_last_not_of(" \t") + 1);
+        setari[cheie] = valoare;
     }
     fisier.close();
-}
-
-std::string ConfiguratorJoc::preiaSetare(const std::string& cheie, const std::string& implicit) const {
-    auto it = setari.find(cheie);
-    return (it != setari.end()) ? it->second : implicit;
 }
 
 int ConfiguratorJoc::preiaSetareInt(const std::string& cheie, int implicit) const {
@@ -61,15 +61,6 @@ int ConfiguratorJoc::preiaSetareInt(const std::string& cheie, int implicit) cons
         } catch (...) {
             return implicit;
         }
-    }
-    return implicit;
-}
-
-bool ConfiguratorJoc::preiaSetareBool(const std::string& cheie, bool implicit) const {
-    auto it = setari.find(cheie);
-    if (it != setari.end()) {
-        std::string val = it->second;
-        return (val == "true" || val == "1" || val == "da" || val == "yes");
     }
     return implicit;
 }

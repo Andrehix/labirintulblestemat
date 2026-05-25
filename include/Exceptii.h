@@ -4,30 +4,34 @@
 #include <stdexcept>
 #include <string>
 
-// Ierarhie de excepții specifică proiectului — complet independentă de ierarhia VanatorAI
-
-// Baza: erori legate de joc
 class EroareJoc : public std::runtime_error {
 public:
     explicit EroareJoc(const std::string& mesaj);
 };
 
-// Categorie 1: Erori legate de hartă
-class EroareHarta : public EroareJoc {
+class EroareInitializare : public EroareJoc {
 public:
-    explicit EroareHarta(const std::string& mesaj);
+    explicit EroareInitializare(const std::string& mesaj);
 };
 
-// Categorie 2: Erori legate de jucător
-class EroareJucator : public EroareJoc {
+class EroareFisierLipsa : public EroareInitializare {
 public:
-    explicit EroareJucator(const std::string& mesaj);
+    explicit EroareFisierLipsa(const std::string& mesaj);
 };
 
-// Categorie 3: Erori legate de inventar / obiecte
-class EroareInventar : public EroareJoc {
+class EroareFormatFisier : public EroareInitializare {
 public:
-    explicit EroareInventar(const std::string& mesaj);
+    explicit EroareFormatFisier(const std::string& mesaj);
 };
 
-#endif // EXCEPTII_H
+class EroareLogica : public EroareJoc {
+public:
+    explicit EroareLogica(const std::string& mesaj);
+};
+
+class EroareActiuneInvalida : public EroareLogica {
+public:
+    explicit EroareActiuneInvalida(const std::string& mesaj);
+};
+
+#endif
